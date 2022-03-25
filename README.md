@@ -1,6 +1,10 @@
 # Autoware-Jetson
 Create a Docker image for Jetson of Autoware. Also, enable Autoware to be started on the container.
 
+Addition: you can pull the built docker image with this commmand:
+```
+docker pull baofuwu/autoware.ai:jetson-agx-xavier-r32.4.4-1.14.0
+```
 ## Install
 ```bash
 #!/bin/bash
