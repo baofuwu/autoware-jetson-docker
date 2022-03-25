@@ -14,9 +14,8 @@ function usage_exit {
   cat <<_EOS_ 1>&2
   Usage: $PROG_NAME [OPTIONS...]
   OPTIONS:
-    -h, --help              このヘルプを表示
-    -c, --container         コンテナの名前を設定します．
-_EOS_
+    -h, --help           
+    -c, --container      
     exit 1
 }
 
@@ -24,11 +23,11 @@ function usage_exit {
   cat <<_EOS_ 1>&2
   Usage: $PROG_NAME [OPTIONS...]
   OPTIONS:
-    -h, --help                      このヘルプを表示
-    -l, --launch {on|off}           runtime_managerの起動（既定値：${AUTOWARE_LAUNCH}）
-    -p, --param FILE                読み込むAutowareの設定ファイルを指定
-    -s, --save FILE                 Autowareの設定ファイルの保存先を指定
-    -n, --name NAME                 コンテナの名前を指定
+    -h, --help          
+    -l, --launch {on|off}           Launch runtime_manager (default: $ { AUTOWARE_LAUNCH } )
+    -p, --param FILE                Specify the Autoware configuration file to read
+    -s, --save FILE                 Specify the save destination of the Autoware configuration file.
+    -n, --name NAME                 Specify the name of the container
 _EOS_
     cd ${CURRENT_DIR}
     exit 1
@@ -39,7 +38,7 @@ while (( $# > 0 )); do
         usage_exit
     elif [[ $1 == "--launch" ]] || [[ $1 == "-l" ]]; then
         if [[ $2 != "on" ]] && [[ $2 != "off" ]]; then
-            echo "無効なパラメータ： $1 $2"
+            echo "Invalid parameter: $1 $2"
             usage_exit
         fi
         AUTOWARE_LAUNCH=$2
@@ -48,7 +47,7 @@ while (( $# > 0 )); do
         if [[ -f $2 ]]; then
             PARAM_YML=$2
         else
-            echo "無効なパラメータ： $1 $2"
+            echo "Invalid parameter: $1 $2"
             usage_exit
         fi
         shift 2
@@ -56,19 +55,19 @@ while (( $# > 0 )); do
         if [[ -d $(dirname $(readlink -f $2)) ]]; then
             SAVE_PATH=$2
         else
-            echo "無効なパラメータ： $1 $2"
+            echo "Invalid parameter： $1 $2"
             usage_exit
         fi
         shift 2
     elif [[ $1 == "--name" ]] || [[ $1 == "-n" ]]; then
         if [[ $2 == -* ]] || [[ $2 == *- ]]; then
-            echo "無効なパラメータ： $1 $2"
+            echo "Invalid parameter： $1 $2"
             usage_exit
         fi
         CONTAINER_NAME=$2
         shift 2
     else
-        echo "無効なパラメータ： $1"
+        echo "Invalid parameter： $1"
         usage_exit
     fi
 done
@@ -76,8 +75,8 @@ done
 images="$(docker image ls jetson/autoware | grep jetson/autoware)"
 
 if [[ "${images}" == "" ]]; then
-    echo 'jetson/autoware のDockerイメージが見つかりませんでした．'
-    echo 'docker/build-docker.sh でイメージを作成するか，イメージをpullしてください．'
+    echo 'jetson/autoware docker image was not found．'
+    echo 'Create  an image with docker / build-docker.sh or pull the image. '
     usage_exit
 fi
 
@@ -91,7 +90,7 @@ END
 if [[ ${#images_list[@]} -eq 1 ]]; then
     DOCKER_IMAGE="${images_list[0]}"
 else
-    echo -e "番号\tイメージ:タグ"
+    echo -e "number \t image: tag"
     cnt=0
     for img in "${images_list[@]}"; do
         echo -e "${cnt}:\t${img}"
@@ -100,7 +99,7 @@ else
     isnum=3
     img_num=-1
     while [[ ${isnum} -ge 2 ]] || [[ ${img_num} -ge ${cnt} ]] || [[ ${img_num} -lt 0 ]]; do
-        read -p "使用するコンテナの番号を入力してください: " img_num
+        read -p "Enter the number of the container you want to use: " img_num
         expr ${img_num} + 1 > /dev/null 2>&1
         isnum=$?
     done
