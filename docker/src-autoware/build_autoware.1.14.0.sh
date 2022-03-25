@@ -31,6 +31,9 @@ mkdir -p autoware.ai/src
 cd autoware.ai
 wget -O autoware.ai.repos "https://raw.githubusercontent.com/Autoware-AI/autoware.ai/1.14.0/autoware.ai.repos"
 vcs import src < autoware.ai.repos
+  
+sed -i 's/10.0/10.2/' ~/autoware.ai/src/autoware/common/autoware_build_flags/cmake/autoware_build_flags-extras.cmake
+
 rosdep update
 rosdep install -y --from-paths src --ignore-src --rosdistro melodic
 
