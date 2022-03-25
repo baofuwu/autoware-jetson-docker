@@ -16,8 +16,8 @@ function usage_exit {
   cat <<_EOS_ 1>&2
   Usage: $PROG_NAME [OPTIONS...]
   OPTIONS:
-    -h, --help                      このヘルプを表示
-    -v, --version AUTOWARE_VERSION  Autowareのバージョンを指定(>=1.12.0)
+    -h, --help Show this help
+    -v, --version AUTOWARE_VERSION Specify the version of Autoware (> = 1.12.0)
 _EOS_
     cd ${CURRENT_DIR}
     exit 1
@@ -28,14 +28,14 @@ while (( $# > 0 )); do
         usage_exit
     elif [[ $1 == "--version" ]] || [[ $1 == "-v" ]]; then
         if [[ $2 == -* ]]; then
-            echo "無効なパラメータ"
+            echo "invalid parameter"
             usage_exit
         else
             AUTOWARE_VERSION=$2
         fi
         shift 2
     else
-        echo "無効なパラメータ： $1"
+        echo "invalid parameter： $1"
         usage_exit
     fi
 done
@@ -46,7 +46,7 @@ IMAGE_EXIST=$(docker images | grep ${ROS_IMAGE} | grep ${ROS_TAG})
 if [[ -z ${IMAGE_EXIST} ]]; then
     ${BUILD_DIR}/src-ros/docker/build-docker.sh
     if [[ $? != 0 ]]; then
-        echo "エラーにより中断しました．"
+        echo "Interrupted due to an error."
         cd ${CURRENT_DIR}
         exit 1
     fi
@@ -80,8 +80,11 @@ if [[ -n ${CONTAINER_EXIST} ]]; then
     docker rm ${CONTAINER_NAME}
 fi
 
+# xhost +
+
 docker run \
     -it \
+    # --runtime nvidia \
     --gpus all \
     --privileged \
     --name ${CONTAINER_NAME} \
@@ -92,7 +95,7 @@ docker run \
     ${CONTAINER_CMD}
 
 if [[ $? != 0 ]]; then
-    echo "エラーにより中断しました．"
+    echo "Interrupted due to an error."
     cd ${CURRENT_DIR}
     exit 1
 fi
@@ -111,3 +114,4 @@ CONTAINER_EXIST=$(docker ps -a | grep ${CONTAINER_NAME})
 if [[ -n ${CONTAINER_EXIST} ]]; then
     docker rm ${CONTAINER_NAME}
 fi
+
