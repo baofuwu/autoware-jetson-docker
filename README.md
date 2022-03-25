@@ -4,7 +4,7 @@ Create a Docker image for Jetson of Autoware. Also, enable Autoware to be starte
 ## Install
 ```bash
 #!/bin/bash
-git clone --recursive https://github.com/shikishima-TasakiLab/autoware-jetson-docker.git Autoware-Jetson
+git clone --recursive https://github.com/baofuwu/autoware-jetson-docker.git Autoware-Jetson
 ```
 
 ## How to use
