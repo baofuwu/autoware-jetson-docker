@@ -13,7 +13,7 @@ function usage_exit {
   cat <<_EOS_ 1>&2
   Usage: $PROG_NAME [OPTIONS...]
   OPTIONS:
-    -h, --help              このヘルプを表示
+    -h, --help       
 _EOS_
     exit 1
 }
@@ -22,7 +22,7 @@ while (( $# > 0 )); do
     if [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
         usage_exit
     else
-        echo "無効なパラメータ: $1"
+        echo "Invalid parameter: $1"
         usage_exit
     fi
 done
@@ -30,7 +30,7 @@ done
 CONTAINERS="$(docker ps | grep ${DOCKER_IMAGE})"
 
 if [[ "${CONTAINERS}" == "" ]]; then
-    echo 'コンテナが起動していません．'
+    echo 'container is not running.'
     usage_exit
 fi
 
@@ -45,7 +45,7 @@ if [[ ${#containers_list[@]} -eq 1 ]]; then
     CONTAINER_ID=${containers_list[0]:0:12}
     echo "${containers_list[0]}"
 else
-    echo -e "番号\tコンテナID\tコンテナ名"
+    echo -e "number \t container ID \t container name"
     cnt=0
     for ctn in "${containers_list[@]}"; do
         echo -e "${cnt}:\t${ctn}"
@@ -54,7 +54,7 @@ else
     isnum=3
     ctn_num=-1
     while [[ ${isnum} -ge 2 ]] || [[ ${ctn_num} -ge ${cnt} ]] || [[ ${ctn_num} -lt 0 ]]; do
-        read -p "使用するコンテナの番号を入力してください: " ctn_num
+        read -p "Enter the number of the container you want to use: " ctn_num
         expr ${ctn_num} + 1 > /dev/null 2>&1
         isnum=$?
     done
